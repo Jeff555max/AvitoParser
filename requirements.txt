@@ -1,29 +1,16 @@
-# Основные зависимости для парсинга
-requests==2.31.0
-beautifulsoup4==4.12.2
-lxml==4.9.3
-
-# Для работы с JSON и асинхронностью
-aiohttp==3.8.5
-asyncio==3.4.3
-
-# Для работы с базами данных
-sqlalchemy==2.0.20
-psycopg2==2.9.7  # Для PostgreSQL
-# sqlite3  # Встроен в Python, не требуется установка через pip
-
-# Для логирования
-loguru==0.7.0
-
-# Для работы с датами и временем
-python-dateutil==2.8.2
-
-# Для работы с файлами конфигурации
-PyYAML==6.0.1
-
-# Для тестирования
-pytest==7.4.2
-pytest-asyncio==0.21.1
-
-# Для работы с прокси и обхода блокировок
-fake-useragent==1.4.0
+requests
+beautifulsoup4
+lxml
+aiohttp
+asyncio
+sqlalchemy
+psycopg2
+loguru
+python-dateutil
+PyYAML
+pytest
+pytest-asyncio
+fake-useragent
+curl-cffi
+playwright
+python-dotenv
