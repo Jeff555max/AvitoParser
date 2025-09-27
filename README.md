@@ -34,7 +34,7 @@
 3. Установите зависимости:
    ```
    python init_project.py
-   pip install requirements.txt
+   pip install -r requirements.txt
    ```
 
 ## Использование
