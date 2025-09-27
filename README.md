@@ -33,6 +33,7 @@
 
 3. Установите зависимости:
    ```
+   python init_project.py
    pip install requirements.txt
    ```
 
