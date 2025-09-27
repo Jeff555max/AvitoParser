@@ -21,11 +21,11 @@
 
 1. Клонируйте репозиторий:
    ```
-   git clone <repository-url>
+   git clone https://github.com/Jeff555max/AvitoParser.git
    cd AvitoParser
    ```
 
-2. Создайте виртуальное окружение (необязательно, но рекомендуется):
+2. Создайте виртуальное окружение:
    ```
    python -m venv venv
    source venv/bin/activate  # В Windows: venv\Scripts\activate
@@ -33,15 +33,17 @@
 
 3. Установите зависимости:
    ```
-   python init_project.py
+   pip install requirements.txt
    ```
 
 ## Использование
 
-1. Измените целевой URL в `src/main.py`
+1. Создайте файл .env 
+   Создайте в нем целевой URL 
+   URL="ваш адрес"
 2. Запустите парсер:
    ```
-   python src/main.py
+   python main.py
    ```
 
 ## Структура проекта
@@ -49,12 +51,12 @@
 - `src/` - Основной исходный код
   - `base_parser.py` - Базовый класс парсера
   - `anti_bot_parser.py` - Реализация парсера с обходом защиты от ботов
-  - `main.py` - Пример использования
+
 - `services/` - Вспомогательные модули
   - `headers.py` - Управление пользовательскими заголовками
   - `user_agent_pc.txt` - Список user agent'ов
 - `cookies.json` - Сохраненные cookies (создается после первого запуска)
-
+- `main.py` - Пример использования
 ## Как это работает
 
 1. Парсер сначала пытается получить контент, используя curl-cffi с пользовательскими заголовками
@@ -76,3 +78,5 @@
 - Измените `services/headers.py` для настройки заголовков запросов
 - Добавьте или измените user agent'ы в `services/user_agent_pc.txt`
 - Настройте параметры Playwright в `src/anti_bot_parser.py`
+
+Возможна блокировка из за подозрительного IP адреса (пробуйте разные варианты)
