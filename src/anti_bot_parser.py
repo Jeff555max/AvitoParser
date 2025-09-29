@@ -23,6 +23,8 @@ class AntiBotParser(BaseParser):
         self.playwright = None
         self.browser = None
         self.context = None
+        # Прокси из переменной окружения
+        self.proxy = os.getenv("PROXY_URL")
     
     def __enter__(self):
         return self
@@ -31,14 +33,22 @@ class AntiBotParser(BaseParser):
         self.close_browser()
     
     def init_browser(self) -> None:
-        """Инициализация браузера Playwright для обхода Cloudflare"""
+        """Инициализация браузера Playwright для обхода Cloudflare с поддержкой прокси"""
         if not self.playwright:
             self.playwright = sync_playwright().start()
-            self.browser = self.playwright.chromium.launch(
-                headless=True  # Установите True для продакшена
-            )
+            launch_args = {"headless": True}
+            if self.proxy:
+                # Playwright proxy format: {server: ..., username: ..., password: ...}
+                from urllib.parse import urlparse
+                proxy_url = urlparse(self.proxy)
+                launch_args["proxy"] = {
+                    "server": f"{proxy_url.scheme}://{proxy_url.hostname}:{proxy_url.port}"
+                }
+                if proxy_url.username and proxy_url.password:
+                    launch_args["proxy"]["username"] = proxy_url.username
+                    launch_args["proxy"]["password"] = proxy_url.password
+            self.browser = self.playwright.chromium.launch(**launch_args)
             self.context = self.browser.new_context()
-            
             # Загрузка cookies, если доступны
             if self.session_cookies:
                 self.context.add_cookies(self.format_cookies_for_playwright())
@@ -107,24 +117,22 @@ class AntiBotParser(BaseParser):
             return None
     
     def parse_with_curl(self, url: str) -> Optional[str]:
-        """Парсинг URL с использованием curl-cffi с пользовательскими заголовками"""
+        """Парсинг URL с использованием curl-cffi с пользовательскими заголовками и поддержкой прокси"""
         try:
             print(f"Парсинг {url} с помощью curl-cffi...")
-            
-            # Использование curl-cffi с имперсонацией
-            response = curl_requests.get(
-                url,
-                headers=CUSTOM_HEADERS,
-                cookies=self.session_cookies,
-                impersonate="chrome110"  # Использование имперсонации Chrome
-            )
-            
+            kwargs = {
+                "headers": CUSTOM_HEADERS,
+                "cookies": self.session_cookies,
+                "impersonate": "chrome110"
+            }
+            if self.proxy:
+                kwargs["proxies"] = self.proxy
+            response = curl_requests.get(url, **kwargs)
             # Обновление cookies
             if response.cookies:
                 cookies_dict = dict(response.cookies)
                 self.session_cookies.update(cookies_dict)
                 self.save_cookies(self.session_cookies)
-            
             return response.text
         except Exception as e:
             print(f"Ошибка парсинга с помощью curl-cffi: {e}")

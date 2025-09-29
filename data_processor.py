@@ -6,7 +6,11 @@ import re
 def parse_objects_from_html(html: str, base_url: str = ""):  # base_url нужен для формирования абсолютных ссылок
     soup = BeautifulSoup(html, 'lxml')
     results = []
-    for div in soup.find_all('div', class_='index-root'):
+    # Новый селектор: ищем div с id='bx_serp-item-list', внутри него div с data-marker='item'
+    serp_list = soup.find('div', id='bx_serp-item-list')
+    if not serp_list:
+        return results
+    for div in serp_list.find_all('div', attrs={'data-marker': 'item'}, recursive=False):
         obj = {}
         # title
         title_tag = div.find(['h3', 'h2', 'a'], recursive=True)
