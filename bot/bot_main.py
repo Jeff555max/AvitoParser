@@ -1,9 +1,15 @@
+
 import telebot
 from telebot import types
 import subprocess
 import os
 import sqlite3
-from bot_config import TELEGRAM_BOT_TOKEN, ADMIN_IDS, PAGE_SIZE
+from dotenv import load_dotenv
+load_dotenv()
+
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+ADMIN_IDS = [int(x) for x in os.getenv("ADMIN_IDS", "").split(",") if x.strip()]
+PAGE_SIZE = int(os.getenv("PAGE_SIZE", 5))
 
 bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN)
 
