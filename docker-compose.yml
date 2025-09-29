@@ -1,0 +1,20 @@
+services:
+  avitoparser:
+    build: .
+    container_name: avito_parser_app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - TZ=Europe/Moscow
+    volumes:
+      - ./:/app
+      - db_data:/db
+      - .env:/app/.env:ro
+    working_dir: /app
+    command: ["python", "main.py"]
+    restart: unless-stopped
+    # Порт не требуется, если нет веб-интерфейса
+
+volumes:
+  db_data:
+    driver: local
+    # Путь к БД будет /db внутри контейнера, а на хосте volume db_data
