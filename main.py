@@ -70,12 +70,17 @@ def main():
     print(f"Предпросмотр текста: {data.get('text_content', 'N/A')[:200]}...")
     print(f"Всего ссылок найдено: {data.get('total_links', 0)}")
 
+
     # Сохраняем результат в базу данных и Excel
     data_for_save = dict(data)
     data_for_save['url'] = url
     from save_results import save_to_sqlite, save_to_excel
     save_to_sqlite(data_for_save)
     save_to_excel(data_for_save)
+
+    # Новый процессор: извлечение объектов и сохранение в БД
+    from data_processor import process_html_and_save
+    process_html_and_save(html_content, base_url=url)
 
     # Отправка данных в другой модуль (пример)
     parser.send_to_module(str(data), "data_processor")
