@@ -4,6 +4,8 @@ from typing import Dict, Any
 import os
 
 def save_to_sqlite(data: Dict[str, Any], db_path: str = "results.db"):
+    import os
+    db_path = os.environ.get("DB_PATH", "/db/results.db")
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute('''

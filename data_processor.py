@@ -61,6 +61,8 @@ def parse_objects_from_html(html: str, base_url: str = ""):  # base_url нуже
     return results
 
 def save_objects_to_sqlite(objects: List[Dict[str, Any]], db_path: str = "results.db"):
+    import os
+    db_path = os.environ.get("DB_PATH", "/db/results.db")
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute('''
